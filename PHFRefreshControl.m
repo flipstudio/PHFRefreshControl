@@ -16,14 +16,27 @@ static NSTimeInterval const kAnimationDuration = 0.25;
 
 @implementation PHFRefreshControl
 
+- (id)initWithTintColor:(UIColor *)tintColor {
+    self = [self init];
+    
+    if (self) {
+        self.tintColor = tintColor;
+    }
+    
+    return self;
+}
+
 - (id)init {
     self = [super initWithFrame:CGRectMake(0, 0, 100, kViewHeight)];
-    [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
+    
+    if (self) {
+        [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
 
-    [[self layer] setAnchorPoint:CGPointMake(0, 1)];
+        [[self layer] setAnchorPoint:CGPointMake(0, 1)];
 
-    [self addSubview:[self arrowImageView]];
-    [self addSubview:[self activityIndicatorView]];
+        [self addSubview:[self arrowImageView]];
+        [self addSubview:[self activityIndicatorView]];
+    }
 
     return self;
 }
@@ -251,6 +264,9 @@ static NSTimeInterval const kAnimationDuration = 0.25;
 
         if (stretchFactor > kMaxStretchFactor) {
             [self sendActionsForControlEvents:UIControlEventValueChanged];
+            if (_refreshBlock)
+                _refreshBlock();
+            
             [self beginRefreshing];
         } else {
             [[self layer] setAffineTransform:transform];
@@ -274,6 +290,22 @@ static char kRefreshControlKey;
 
 - (PHFRefreshControl *)refreshControl {
     return objc_getAssociatedObject(self, &kRefreshControlKey);
+}
+
+- (PHFRefreshControl *)setRefreshControlWithTarget:(id)target action:(SEL)action {
+    PHFRefreshControl *refreshControl = [[PHFRefreshControl alloc] init];
+    [refreshControl addTarget:target action:action forControlEvents:UIControlEventValueChanged];
+    [self setRefreshControl:refreshControl];
+    
+    return refreshControl;
+}
+
+- (PHFRefreshControl *)setRefreshControlWithRefreshBlock:(void (^)(void))refreshBlock {
+    PHFRefreshControl *refreshControl = [[PHFRefreshControl alloc] init];
+    [refreshControl setRefreshBlock:refreshBlock];
+    [self setRefreshControl:refreshControl];
+    
+    return refreshControl;
 }
 
 @end
