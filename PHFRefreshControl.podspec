@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.homepage       = 'https://github.com/fphilipe/PHFRefreshControl'
   s.license        = { :type => 'MIT', :file => 'LICENSE' }
   s.author         = { 'Philipe Fatio' => 'me@phili.pe' }
-  s.source         = { :git => 'https://github.com/fphilipe/PHFRefreshControl.git', :tag => 'v1.0.0' }
+  s.source         = { :git => 'git@github.com:flipstudio/PHFRefreshControl.git', :tag => 'v1.0.1' }
   s.platform       = :ios, '5.0'
   s.source_files   = 'PHFRefreshControl.{h,m}'
   s.preserve_paths = 'LICENSE', 'README.md'
